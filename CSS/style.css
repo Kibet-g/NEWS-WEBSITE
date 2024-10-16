@@ -5,10 +5,12 @@ body{
     background-color: #f4f4f4;
 }
 
+/* I have centered the contents of the Header and changed the background color */
 header{
     background-color: #007bff;
     color: white;
     padding: 20px;
     text-align: center;
 }
+
 
