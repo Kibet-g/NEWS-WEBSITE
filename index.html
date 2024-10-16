@@ -24,5 +24,20 @@
         <button onclick="fetchNews('entertainment')">Entertainment</button>
         <button onclick="fetchNews('science')">Science/Tech</button>
     </nav>
+    <!--this is the part where the news will display after being fetched from our API-->
+    <div id="newsContainer">
+        <!--This will display the news articles fetched from the API-->
+      <!-- Popup for Full Article -->
+    <div id="fullArticlePopup" class="popup">
+        <div class="popup-content">
+            <span class="close-popup">&times;</span>
+            <h2 id="fullArticleTitle"></h2>
+            <img id="fullArticleImage" src="" alt="News Image">
+            <p id="fullArticleDescription"></p>
+            <button onclick="closeFullArticle()">Close</button>
+        </div>
+    </div>
+
+    <script src="/JAVASCRIPT/app.js"></script>
 </body>
 </html>
