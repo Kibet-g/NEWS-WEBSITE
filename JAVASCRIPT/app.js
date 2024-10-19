@@ -1,7 +1,9 @@
 //We have declared our API Key for the project to fetch data for the news
-const API_KEY = '';
-const API_URL = '';
+require('dotenv').config();
 
-document.addEventListener('DOMContentLoaded',()=>{
+const API_KEY = process.env.API_KEY;
+const API_URL = process.env.API_URL;
+
+document.addEventListener('DOMContentLoaded', () => {
     fetchNews('general');
 });
