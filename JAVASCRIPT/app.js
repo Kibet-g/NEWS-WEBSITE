@@ -1,12 +1,11 @@
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Fetch API key from Vercel environment variables
-const API_URL = 'https://newsapi.org/v2/';
-const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'; // CORS proxy server URL
+const API_ENDPOINT = '/api/fetch-news'; // Your serverless function endpoint
 let currentPage = 1; // Track the current page for pagination
 let currentCategory = 'general'; // Track the category
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
 });
+
 
 // Infinite scrolling function
 window.addEventListener('scroll', () => {
