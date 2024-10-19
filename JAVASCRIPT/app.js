@@ -1,4 +1,6 @@
-const API_ENDPOINT = '/api/fetch-news'; // Your serverless function endpoint
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Fetch API key from Vercel environment variables
+const API_URL = 'https://newsapi.org/v2/';
+const CORS_PROXY = 'https://api.allorigins.win/get?url='; // AllOrigins proxy
 let currentPage = 1; // Track the current page for pagination
 let currentCategory = 'general'; // Track the category
 
@@ -6,24 +8,16 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
 });
 
-
-// Infinite scrolling function
-window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        currentPage++;
-        fetchNews(currentCategory, currentPage); // Fetch more news on scroll
-    }
-});
-
 async function fetchNews(category, page = 1) {
     currentCategory = category; // Set the current category
     try {
-        const response = await fetch(`${CORS_PROXY}${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+        const response = await fetch(`${CORS_PROXY}${encodeURIComponent(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`)}`);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        displayNews(data.articles, page);
+        const articles = JSON.parse(data.contents).articles;
+        displayNews(articles, page);
     } catch (error) {
         console.error('Error fetching news:', error);
     }
