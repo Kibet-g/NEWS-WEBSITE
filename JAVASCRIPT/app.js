@@ -70,11 +70,17 @@ function displayNews(articles, page = 1) {
             openFullArticle(article);
         });
 
+        // "Read More" button to open full article in a new tab
+        newsItem.querySelector('.read-more').addEventListener('click', (event) => {
+            event.stopPropagation(); // Prevent triggering the SweetAlert popup
+            window.open(article.url, '_blank'); // Open full article in a new tab
+        });
+
         newsContainer.appendChild(newsItem);
     });
 }
 
-// Function to open the full article using SweetAlert with full content displayed and "Read More" button
+// Function to open the full article using SweetAlert with full content displayed
 function openFullArticle(article) {
     const fullContent = article.content || article.description || 'No content available';
 
@@ -83,7 +89,7 @@ function openFullArticle(article) {
         html: `
             <img src="${article.urlToImage || 'https://via.placeholder.com/300'}" alt="Article Image" style="width:100%; max-height:300px; object-fit:cover; border-radius:5px;">
             <p style="text-align: left;">${fullContent.replace(/\[\+\d+ chars\]/, '')}</p>
-            <button id="readMoreBtn" style="padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">Read More</button>
+            <a href="${article.url}" target="_blank" style="color: #007bff; text-decoration: none;">Read full article</a>
         `,
         showCloseButton: true,
         showConfirmButton: false,
@@ -92,12 +98,5 @@ function openFullArticle(article) {
         background: '#fff',
         scrollbarPadding: false, // Allow scrolling
         heightAuto: false // In case of long content, modal remains scrollable
-    }).then(() => {
-        // Handle what happens when SweetAlert closes, if needed
-    });
-
-    // Add event listener to "Read More" button after the SweetAlert is rendered
-    document.getElementById('readMoreBtn').addEventListener('click', () => {
-        window.open(article.url, '_blank'); // Open full article in a new tab
     });
 }
