@@ -85,6 +85,13 @@ nav button:hover {
     justify-content: center;
     align-items: center;
 }
-
-
+/* Popup content parameters so that the content can be  displayed   on the news items */
+.popup-content{
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+}
 
