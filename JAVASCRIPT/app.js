@@ -46,3 +46,12 @@ function displayNews(articles) {
         newsContainer.appendChild(newsItem);
     });
 }
+// This function opens a new popup window to display the full article when the "Read More" button is clicked
+function openFullArticle(article) {
+    const popup = document.getElementById('fullArticlePopup');
+    const fullArticleTitle = document.getElementById('fullArticleTitle');
+    const fullArticleImage = document.getElementById('fullArticleImage');
+    const fullArticleDescription = document.getElementById('fullArticleDescription');
+
+    //Pipulate our article with data
+}
