@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HABARI ZETU NEWS SITE</title>
+    <title>Modern News Website</title>
     <link rel="stylesheet" href="/CSS/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <!--This is our header part for our news site-->
     <header>
-        <h1> HABARI ZETU</h1>
-        <input type ="text" id="serch" placeholder="search latest news">
-        <!--Here we are implementing our button to search for the news-->
+        <h1>Modern News Website</h1>
+        <input type="text" id="searchBar" placeholder="Search news...">
         <button onclick="searchNews()">Search</button>
+        
+        <!-- Date Filter Inputs -->
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate">
+        <button onclick="searchNewsWithDate()">Filter by Date</button>
     </header>
-    <!--Our start of the navigation menu with the news categories-->
+    
     <nav>
-        <!--Our news categories part that contains the various news category buttons-->
         <button onclick="fetchNews('general')">General</button>
         <button onclick="fetchNews('business')">Business</button>
         <button onclick="fetchNews('sports')">Sports</button>
-        <button onclick="fetchNews('health')">Health</button>
-        <button onclick="fetchNews('politics')">Politics</button>
+        <button onclick="fetchNews('technology')">Technology</button>
         <button onclick="fetchNews('entertainment')">Entertainment</button>
-        <button onclick="fetchNews('science')">Science/Tech</button>
-        
     </nav>
-    <!--this is the part where the news will display after being fetched from our API-->
-    <div id="newsContainer">
-        <!--This will display the news articles fetched from the API-->
-      <!-- Popup for Full Article -->
+    <div id="newsContainer"></div>
+
+    <!-- Popup for Full Article -->
     <div id="fullArticlePopup" class="popup">
         <div class="popup-content">
             <span class="close-popup">&times;</span>

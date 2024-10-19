@@ -1,32 +1,23 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    margin:0;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
     padding: 0;
     background-color: #f4f4f4;
 }
 
-/* I have centered the contents of the Header and changed the background color */
-header{
+header {
     background-color: #007bff;
     color: white;
     padding: 20px;
     text-align: center;
 }
-/* To center our Nav-Bar elements so this centers our buttons for the news categories */
- nav {
+
+nav {
     margin: 10px 0;
     text-align: center;
 }
-nav button {
-    margin: 0 5px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
 
-}
-/* I have changed the background color of the section to light grey and added padding to the content */
 nav button {
     margin: 0 5px;
     padding: 10px;
@@ -36,22 +27,18 @@ nav button {
     cursor: pointer;
 }
 
-/* I have added a hover effect to the nav buttons to change their background color */
 nav button:hover {
     background-color: #0056b3;
-    transition: background-color 0.3s ease;
 }
 
-/* I have added a border to the newsContainer to separate the news articles */
-#newsContainer{
+#newsContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 20px;
+    padding: 20px;
 }
 
-/* I have added a transition effect to the news items on hover */
-.news-item{
+.news-item {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -62,44 +49,69 @@ nav button:hover {
     transition: transform 0.2s;
 }
 
-/* I have added the news item:hover part */
 .news-item:hover {
     transform: translateY(-5px);
 }
 
-/* I have added a popup style to the news items */
-.news-item img{
+.news-item img {
     max-width: 100%;
+    height: auto;
     border-radius: 5px;
 }
-/* I have added a smooth transition effect to the news items on hover, making the user experience more interactive and visually appealing. */
-.popup{
-    max-width: 100%;
-    border-radius: 5px;
+
+/* Popup Styles */
+.popup {
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
 }
-/* Popup content parameters so that the content can be  displayed   on the news items */
-.popup-content{
+
+.popup.active {
+    display: flex;
+}
+
+.popup-content {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
     text-align: center;
     position: relative;
 }
-/* close popup  when parameters */
-.close{
+
+.popup-content img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.close-popup {
     position: absolute;
-    top: 20px;
+    top: 10px;
     right: 20px;
-    font-size: 30px;
-    font-weight: bold;
+    font-size: 20px;
     cursor: pointer;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
