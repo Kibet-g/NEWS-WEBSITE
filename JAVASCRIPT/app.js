@@ -1,12 +1,5 @@
-// Use the API key from the environment variable set in Netlify
-const API_KEY = window.NF_API_KEY; // Set this in Netlify's environment variables
-const API_URL = window.NF_API_URL; // Set this in Netlify's environment variables
-
-let currentCategory = 'general'; // Set a default category
-let currentPage = 1; // Initialize current page
-
 document.addEventListener('DOMContentLoaded', () => {
-    fetchNews(currentCategory);
+    fetchNews('general'); // Set a default category to fetch news
 });
 
 // Infinite scrolling function
@@ -19,7 +12,7 @@ window.addEventListener('scroll', () => {
 
 async function fetchNews(category, page = 1) {
     currentCategory = category; // Set the current category
-    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+    const response = await fetch(`/api/proxy?endpoint=top-headlines&category=${category}&country=us&page=${page}`);
     const data = await response.json();
     displayNews(data.articles, page);
 }
@@ -27,7 +20,7 @@ async function fetchNews(category, page = 1) {
 async function searchNews() {
     currentPage = 1; // Reset the page
     const query = document.getElementById('searchBar').value;
-    const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
+    const response = await fetch(`/api/proxy?endpoint=everything&q=${query}`);
     const data = await response.json();
     displayNews(data.articles);
 }
@@ -44,7 +37,7 @@ async function searchNewsWithDate() {
         return;
     }
 
-    const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
+    const response = await fetch(`/api/proxy?endpoint=everything&q=${query}&from=${startDate}&to=${endDate}`);
     const data = await response.json();
     displayNews(data.articles);
 }
@@ -92,10 +85,8 @@ function openFullArticle(article) {
         width: 600,
         padding: '3em',
         background: '#fff',
-        scrollbarPadding: false, // Allow scrolling
-        heightAuto: false // In case of long content, modal remains scrollable
-    }).then(() => {
-        // Handle what happens when SweetAlert closes, if needed
+        scrollbarPadding: false,
+        heightAuto: false
     });
 
     // Add event listener to "Read More" button after the SweetAlert is rendered
