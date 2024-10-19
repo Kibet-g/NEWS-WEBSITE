@@ -1,7 +1,9 @@
-const API_KEY = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual API key
+// Load environment variables from .env file
+require('dotenv').config();
+
+// Use the API key from the environment variable
+const API_KEY = process.env.API_KEY;
 const API_URL = 'https://newsapi.org/v2/';
-let currentPage = 1; // Track the current page for pagination
-let currentCategory = 'general'; // Track the category
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
