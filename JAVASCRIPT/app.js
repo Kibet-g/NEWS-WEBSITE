@@ -1,27 +1,23 @@
-//We have declared our API Key for the project to fetch data for the news
-require('dotenv').config();
-
-const API_KEY = process.env.API_KEY;
-const API_URL = process.env.API_URL;
+const API_KEY = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual API key
+const API_URL = 'https://newsapi.org/v2/';
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews('general');
 });
-// This function fetches news articles based on the provided category and displays them on the page
-async function fetchNews(category){
-    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=ke`);
+
+async function fetchNews(category) {
+    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us`);
     const data = await response.json();
     displayNews(data.articles);
-    // This function displays the news articles on the page and displays them on the page itself if the category is by seach
 }
 
-// This function opens a new tab to display the full article when the read more button is clicked
 async function searchNews() {
     const query = document.getElementById('searchBar').value;
     const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
     const data = await response.json();
     displayNews(data.articles);
 }
+
 function displayNews(articles) {
     const newsContainer = document.getElementById('newsContainer');
     newsContainer.innerHTML = '';
@@ -46,12 +42,35 @@ function displayNews(articles) {
         newsContainer.appendChild(newsItem);
     });
 }
-// This function opens a new popup window to display the full article when the "Read More" button is clicked
+// This function populates a popup with the full article content when a user clicks on the "Read More" button in a news item.
 function openFullArticle(article) {
     const popup = document.getElementById('fullArticlePopup');
     const fullArticleTitle = document.getElementById('fullArticleTitle');
     const fullArticleImage = document.getElementById('fullArticleImage');
     const fullArticleDescription = document.getElementById('fullArticleDescription');
 
-    //Pipulate our article with data
+    // Populate full article with data
+    fullArticleTitle.innerText = article.title;
+    fullArticleImage.src = article.urlToImage || 'https://via.placeholder.com/300';
+    fullArticleDescription.innerText = article.content || article.description || 'No content available';
+
+    // Show the popup
+    popup.style.display = 'flex';
 }
+
+// Close Popup Functionality
+const closePopupBtn = document.querySelector('.close-popup');
+closePopupBtn.addEventListener('click', closeFullArticle);
+
+function closeFullArticle() {
+    const popup = document.getElementById('fullArticlePopup');
+    popup.style.display = 'none';
+}
+
+// Close the popup when clicking outside of the content
+const popup = document.getElementById('fullArticlePopup');
+popup.addEventListener('click', (event) => {
+    if (event.target === popup) {
+        closeFullArticle();
+    }
+});
