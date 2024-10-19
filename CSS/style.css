@@ -35,6 +35,8 @@ nav button {
     border: none;
     cursor: pointer;
 }
+
+/* I have added a hover effect to the nav buttons to change their background color */
 nav button:hover {
     background-color: #0056b3;
     transition: background-color 0.3s ease;
