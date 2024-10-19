@@ -26,5 +26,15 @@ nav button {
     cursor: pointer;
 
 }
+/* I have changed the background color of the section to light grey and added padding to the content */
+nav button:hover{
+    margin: 0 5px;
+    padding: 10px;
+    background-color: #343a40;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
 
