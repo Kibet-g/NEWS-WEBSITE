@@ -67,13 +67,24 @@ nav button:hover {
     transform: translateY(-5px);
 }
 
+/* I have added a popup style to the news items */
 .news-item img{
     max-width: 100%;
     border-radius: 5px;
 }
+/* I have added a smooth transition effect to the news items on hover, making the user experience more interactive and visually appealing. */
 .popup{
     max-width: 100%;
     border-radius: 5px;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
 }
+
 
 
