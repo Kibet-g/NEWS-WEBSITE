@@ -1,9 +1,7 @@
-// Use the API key from the environment variable set in Netlify
-const API_KEY = window.NF_API_KEY; // Set this in Netlify's environment variables
-const API_URL = window.NF_API_URL; // Set this in Netlify's environment variables
-
-let currentCategory = 'general'; // Set a default category
-let currentPage = 1; // Initialize current page
+const API_KEY = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual API key
+const API_URL = 'https://newsapi.org/v2/';
+let currentPage = 1; // Track the current page for pagination
+let currentCategory = 'general'; // Track the category
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
