@@ -1,6 +1,6 @@
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Fetch API key from Vercel environment variables
 const API_URL = 'https://newsapi.org/v2/';
-
+const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/'; // CORS proxy server URL
 let currentPage = 1; // Track the current page for pagination
 let currentCategory = 'general'; // Track the category
 
@@ -18,17 +18,31 @@ window.addEventListener('scroll', () => {
 
 async function fetchNews(category, page = 1) {
     currentCategory = category; // Set the current category
-    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
-    const data = await response.json();
-    displayNews(data.articles, page);
+    try {
+        const response = await fetch(`${CORS_PROXY}${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        displayNews(data.articles, page);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
 }
 
 async function searchNews() {
     currentPage = 1; // Reset the page
     const query = document.getElementById('searchBar').value;
-    const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
-    const data = await response.json();
-    displayNews(data.articles);
+    try {
+        const response = await fetch(`${CORS_PROXY}${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        displayNews(data.articles);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
 }
 
 // Function to filter news by date
@@ -43,9 +57,16 @@ async function searchNewsWithDate() {
         return;
     }
 
-    const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
-    const data = await response.json();
-    displayNews(data.articles);
+    try {
+        const response = await fetch(`${CORS_PROXY}${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        displayNews(data.articles);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+    }
 }
 
 function displayNews(articles, page = 1) {
