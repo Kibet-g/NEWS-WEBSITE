@@ -1,26 +1,58 @@
 const API_KEY = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual API key
 const API_URL = 'https://newsapi.org/v2/';
+let currentPage = 1; // Track the current page for pagination
+let currentCategory = 'general'; // Track the category
 
 document.addEventListener('DOMContentLoaded', () => {
-    fetchNews('general');
+    fetchNews(currentCategory);
 });
 
-async function fetchNews(category) {
-    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us`);
+// Infinite scrolling function
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        currentPage++;
+        fetchNews(currentCategory, currentPage); // Fetch more news on scroll
+    }
+});
+
+async function fetchNews(category, page = 1) {
+    currentCategory = category; // Set the current category
+    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
     const data = await response.json();
-    displayNews(data.articles);
+    displayNews(data.articles, page);
 }
 
 async function searchNews() {
+    currentPage = 1; // Reset the page
     const query = document.getElementById('searchBar').value;
     const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
     const data = await response.json();
     displayNews(data.articles);
 }
 
-function displayNews(articles) {
+// Function to filter news by date
+async function searchNewsWithDate() {
+    currentPage = 1; // Reset the page
+    const query = document.getElementById('searchBar').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    if (!startDate || !endDate) {
+        alert('Please select both start and end dates.');
+        return;
+    }
+
+    const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
+    const data = await response.json();
+    displayNews(data.articles);
+}
+
+function displayNews(articles, page = 1) {
     const newsContainer = document.getElementById('newsContainer');
-    newsContainer.innerHTML = '';
+    
+    if (page === 1) {
+        newsContainer.innerHTML = ''; // Clear news if it's a new search or category change
+    }
 
     articles.forEach(article => {
         const newsItem = document.createElement('div');
@@ -33,44 +65,39 @@ function displayNews(articles) {
             <button class="read-more">Read More</button>
         `;
 
-        // Attach the click event to the read more button
-        newsItem.querySelector('.read-more').addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent triggering the news item click event
+        // SweetAlert popup for full article display
+        newsItem.addEventListener('click', () => {
             openFullArticle(article);
         });
 
         newsContainer.appendChild(newsItem);
     });
 }
-// This function populates a popup with the full article content when a user clicks on the "Read More" button in a news item.
+
+// Function to open the full article using SweetAlert with full content displayed and "Read More" button
 function openFullArticle(article) {
-    const popup = document.getElementById('fullArticlePopup');
-    const fullArticleTitle = document.getElementById('fullArticleTitle');
-    const fullArticleImage = document.getElementById('fullArticleImage');
-    const fullArticleDescription = document.getElementById('fullArticleDescription');
+    const fullContent = article.content || article.description || 'No content available';
 
-    // Populate full article with data
-    fullArticleTitle.innerText = article.title;
-    fullArticleImage.src = article.urlToImage || 'https://via.placeholder.com/300';
-    fullArticleDescription.innerText = article.content || article.description || 'No content available';
+    Swal.fire({
+        title: article.title || 'No title available',
+        html: `
+            <img src="${article.urlToImage || 'https://via.placeholder.com/300'}" alt="Article Image" style="width:100%; max-height:300px; object-fit:cover; border-radius:5px;">
+            <p style="text-align: left;">${fullContent.replace(/\[\+\d+ chars\]/, '')}</p>
+            <button id="readMoreBtn" style="padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer;">Read More</button>
+        `,
+        showCloseButton: true,
+        showConfirmButton: false,
+        width: 600,
+        padding: '3em',
+        background: '#fff',
+        scrollbarPadding: false, // Allow scrolling
+        heightAuto: false // In case of long content, modal remains scrollable
+    }).then(() => {
+        // Handle what happens when SweetAlert closes, if needed
+    });
 
-    // Show the popup
-    popup.style.display = 'flex';
+    // Add event listener to "Read More" button after the SweetAlert is rendered
+    document.getElementById('readMoreBtn').addEventListener('click', () => {
+        window.open(article.url, '_blank'); // Open full article in a new tab
+    });
 }
-
-// Close Popup Functionality
-const closePopupBtn = document.querySelector('.close-popup');
-closePopupBtn.addEventListener('click', closeFullArticle);
-
-function closeFullArticle() {
-    const popup = document.getElementById('fullArticlePopup');
-    popup.style.display = 'none';
-}
-
-// Close the popup when clicking outside of the content
-const popup = document.getElementById('fullArticlePopup');
-popup.addEventListener('click', (event) => {
-    if (event.target === popup) {
-        closeFullArticle();
-    }
-});
