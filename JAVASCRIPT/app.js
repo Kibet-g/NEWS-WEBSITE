@@ -1,9 +1,9 @@
-// Load environment variables from .env file
-require('dotenv').config();
+// Use the API key from the environment variable set in Netlify
+const API_KEY = window.NF_API_KEY; // Set this in Netlify's environment variables
+const API_URL = window.NF_API_URL; // Set this in Netlify's environment variables
 
-// Use the API key from the environment variable
-const API_KEY = process.env.API_KEY;
-const API_URL = 'https://newsapi.org/v2/';
+let currentCategory = 'general'; // Set a default category
+let currentPage = 1; // Initialize current page
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
