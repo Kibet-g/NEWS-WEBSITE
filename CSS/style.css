@@ -94,4 +94,12 @@ nav button:hover {
     text-align: center;
     position: relative;
 }
-
+/* close popup  when parameters */
+.close{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+}
