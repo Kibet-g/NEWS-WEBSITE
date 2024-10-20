@@ -1,41 +1,35 @@
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY; // Fetch API key from Vercel environment variables
+const API_KEY = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual API key
 const API_URL = 'https://newsapi.org/v2/';
-const CORS_PROXY = 'https://api.allorigins.win/get?url='; // AllOrigins proxy
 let currentPage = 1; // Track the current page for pagination
 let currentCategory = 'general'; // Track the category
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
 });
+//A function that is displaying the news
+
+
+// Infinite scrolling function
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        currentPage++;
+        fetchNews(currentCategory, currentPage); // Fetch more news on scroll
+    }
+});
 
 async function fetchNews(category, page = 1) {
     currentCategory = category; // Set the current category
-    try {
-        const response = await fetch(`${CORS_PROXY}${encodeURIComponent(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`)}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const articles = JSON.parse(data.contents).articles;
-        displayNews(articles, page);
-    } catch (error) {
-        console.error('Error fetching news:', error);
-    }
+    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+    const data = await response.json();
+    displayNews(data.articles, page);
 }
 
 async function searchNews() {
     currentPage = 1; // Reset the page
     const query = document.getElementById('searchBar').value;
-    try {
-        const response = await fetch(`${CORS_PROXY}${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        displayNews(data.articles);
-    } catch (error) {
-        console.error('Error fetching news:', error);
-    }
+    const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
+    const data = await response.json();
+    displayNews(data.articles);
 }
 
 // Function to filter news by date
@@ -50,16 +44,9 @@ async function searchNewsWithDate() {
         return;
     }
 
-    try {
-        const response = await fetch(`${CORS_PROXY}${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        displayNews(data.articles);
-    } catch (error) {
-        console.error('Error fetching news:', error);
-    }
+    const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
+    const data = await response.json();
+    displayNews(data.articles);
 }
 
 function displayNews(articles, page = 1) {
