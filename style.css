@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 header {
@@ -31,13 +32,14 @@ nav button:hover {
     background-color: #0056b3;
 }
 
-#newsContainer {
+#article-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     padding: 20px;
 }
 
+/* News Article Styles */
 .news-item {
     background-color: white;
     border: 1px solid #ddd;
@@ -46,11 +48,12 @@ nav button:hover {
     padding: 15px;
     width: 300px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .news-item:hover {
     transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .news-item img {
@@ -114,4 +117,51 @@ button {
 
 button:hover {
     background-color: #0056b3;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #f4f4f4;
+}
+
+body.dark-mode header {
+    background-color: #333;
+}
+
+body.dark-mode nav button {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+body.dark-mode nav button:hover {
+    background-color: #444;
+}
+
+body.dark-mode .news-item {
+    background-color: #333;
+    border-color: #444;
+    color: #f4f4f4;
+}
+
+body.dark-mode .popup-content {
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+/* Date Inputs and Search */
+input[type="text"], input[type="date"] {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+}
+
+input[type="text"]:focus, input[type="date"]:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+button#theme-switch {
+    margin-left: 20px;
 }

@@ -10,34 +10,42 @@
 <body>
     <header>
         <h1>Modern News Website</h1>
+        <!-- Search bar and search button for finding news articles -->
         <input type="text" id="searchBar" placeholder="Search news...">
-        <button onclick="searchNews()">Search</button>
+        <button id="searchButton">Search</button>
         
-        <!-- Da~~te Filter Inputs -->
+        <!-- Date Filter Inputs -->
         <label for="startDate">Start Date:</label>
         <input type="date" id="startDate">
         <label for="endDate">End Date:</label>
         <input type="date" id="endDate">
         <button onclick="searchNewsWithDate()">Filter by Date</button>
+
+        <!-- Theme toggle button -->
+        <button id="theme-switch">Dark Mode</button>
     </header>
     
     <nav>
+        <!-- Categories for news -->
+        <button onclick="fetchTopHeadlines()">Top Headlines</button>
         <button onclick="fetchNews('general')">General</button>
         <button onclick="fetchNews('business')">Business</button>
         <button onclick="fetchNews('sports')">Sports</button>
         <button onclick="fetchNews('technology')">Technology</button>
         <button onclick="fetchNews('entertainment')">Entertainment</button>
     </nav>
-    <div id="newsContainer"></div>
 
-    <!-- Popup for Full Article -->
+    <!-- News articles will be displayed here -->
+    <div id="article-list" class="news-container"></div>
+
+    <!-- Popup for Full Article Details -->
     <div id="fullArticlePopup" class="popup">
         <div class="popup-content">
-            <span class="close-popup">&times;</span>
+            <span class="close-popup" onclick="closeFullArticle()">&times;</span>
             <h2 id="fullArticleTitle"></h2>
             <img id="fullArticleImage" src="" alt="News Image">
-            <p id="fullArticleDescription"></p>
-            <button onclick="closeFullArticle()">Close</button>
+            <p id="fullArticleContent"></p>
+            <a id="fullArticleLink" href="" target="_blank">Read Full Article</a>
         </div>
     </div>
 
