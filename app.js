@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function fetchNews(query) {
     currentQuery = query;
 
-    // Construct URL with only essential parameters
     const url = `${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}`;
 
     fetch(url)
@@ -50,16 +49,10 @@ function displayNews(articles) {
             <img src="${article.image_url || 'https://via.placeholder.com/300'}" alt="${article.title}">
             <h3>${article.title}</h3>
             <p>${article.description ? article.description.substring(0, 100) + '...' : ''}</p>
-            <button class="read-more">Read More</button>
         `;
 
         newsItem.addEventListener('click', () => {
             openFullArticle(article);
-        });
-
-        newsItem.querySelector('.read-more').addEventListener('click', (event) => {
-            event.stopPropagation();
-            window.open(article.link, '_blank');
         });
 
         newsContainer.appendChild(newsItem);
@@ -84,4 +77,40 @@ function openFullArticle(article) {
         scrollbarPadding: false,
         heightAuto: false
     });
+}
+
+function searchNews() {
+    const query = document.getElementById('searchBar').value;
+    fetchNews(query);
+}
+
+function searchNewsWithDate() {
+    const query = document.getElementById('searchBar').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+
+    let url = `${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}`;
+    if (startDate) {
+        url += `&from_date=${startDate}`;
+    }
+    if (endDate) {
+        url += `&to_date=${endDate}`;
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (!data.results || data.results.length === 0) {
+                throw new Error("No articles found for the given date range");
+            }
+            displayNews(data.results);
+        })
+        .catch(error => {
+            console.error("Error fetching news with date filter:", error.message);
+            alert(`Failed to fetch news: ${error.message}`);
+        });
+}
+
+function fetchTopHeadlines() {
+    fetchNews('top headlines');
 }
