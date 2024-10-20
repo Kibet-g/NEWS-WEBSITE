@@ -1,3 +1,4 @@
+//Our project is fully ready to be deployed
 const API_KEY = 'pub_5684114c275fff4a14d95587b16846629757a'; 
 const API_URL = 'https://newsdata.io/api/1/news'; // Correct API URL for searching news
 let currentQuery = 'pizza'; // Track the search term (e.g., pizza)
