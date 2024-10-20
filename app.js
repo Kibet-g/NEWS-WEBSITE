@@ -70,7 +70,6 @@ function openFullArticle(article) {
         html: `
             <img src="${article.image_url || 'https://via.placeholder.com/300'}" alt="Article Image" style="width:100%; max-height:300px; object-fit:cover; border-radius:5px;">
             <p style="text-align: left;">${fullContent}</p>
-            <a href="${article.link}" target="_blank" style="color: #007bff; text-decoration: none;">Read full article</a>
         `,
         showCloseButton: true,
         showConfirmButton: false,
