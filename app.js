@@ -19,7 +19,9 @@ window.addEventListener('scroll', () => {
 });
 
 async function fetchNews(category, page = 1) {
-    currentCategory = category; // Set the current category
+    // Set the current category
+    currentCategory = category; 
+    console.log (`searching for: ${category, page = 1}`);
     const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
     const data = await response.json();
     displayNews(data.articles, page);
