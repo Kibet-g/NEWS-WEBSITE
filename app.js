@@ -21,7 +21,7 @@ function fetchNews(query) {
             return response.json();
         })
         .then(data => {
-            if (!data.results || data.results.length === 0) {
+            if (!Array.isArray(data.results) || data.results.length === 0) {
                 throw new Error("No articles found");
             }
             // Filter out duplicate news by title
@@ -103,7 +103,7 @@ function searchNewsWithDate() {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            if (!data.results || data.results.length === 0) {
+            if (!Array.isArray(data.results) || data.results.length === 0) {
                 throw new Error("No articles found for the given date range");
             }
             // Filter out duplicates
@@ -122,6 +122,7 @@ function fetchTopHeadlines() {
 
 // Function to remove duplicates by a specific key (e.g., title)
 function removeDuplicates(arr, key) {
+    if (!Array.isArray(arr)) return arr; // Make sure it's an array
     const seen = new Set();
     return arr.filter(item => {
         const value = item[key];
