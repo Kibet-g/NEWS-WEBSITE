@@ -17,10 +17,13 @@ window.addEventListener('scroll', () => {
 async function fetchNews(category, page = 1) {
     try {
         currentCategory = category;
+        // No CORS proxy used here
         const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
         const data = await response.json();
         
         if (!data.articles) {
@@ -30,6 +33,7 @@ async function fetchNews(category, page = 1) {
         displayNews(data.articles, page);
     } catch (error) {
         console.error("Error fetching news:", error.message);
+        alert(`Failed to fetch news: ${error.message}`);
     }
 }
 
@@ -52,6 +56,7 @@ async function searchNews() {
         displayNews(data.articles);
     } catch (error) {
         console.error("Error searching news:", error.message);
+        alert(`Failed to search news: ${error.message}`);
     }
 }
 
@@ -82,11 +87,12 @@ async function searchNewsWithDate() {
         displayNews(data.articles);
     } catch (error) {
         console.error("Error filtering news by date:", error.message);
+        alert(`Failed to filter news by date: ${error.message}`);
     }
 }
 
 function displayNews(articles, page = 1) {
-    const newsContainer = document.getElementById('article-list'); // Ensure this ID is correct
+    const newsContainer = document.getElementById('article-list');
     
     if (!newsContainer) {
         console.error('newsContainer element not found');
