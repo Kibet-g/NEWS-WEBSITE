@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
 function fetchNews(query) {
     currentQuery = query;
 
-    const url = `${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}`;
+    // Ensure the API fetches only English news
+    const url = `${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}&language=en`;
 
     fetch(url)
         .then(response => {
@@ -23,7 +24,9 @@ function fetchNews(query) {
             if (!data.results || data.results.length === 0) {
                 throw new Error("No articles found");
             }
-            displayNews(data.results);
+            // Filter out duplicate news by title
+            const uniqueArticles = removeDuplicates(data.results, 'title');
+            displayNews(uniqueArticles);
         })
         .catch(error => {
             console.error("Error fetching news:", error.message);
@@ -89,7 +92,7 @@ function searchNewsWithDate() {
     const startDate = document.getElementById('startDate').value;
     const endDate = document.getElementById('endDate').value;
 
-    let url = `${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}`;
+    let url = `${API_URL}?apikey=${API_KEY}&q=${encodeURIComponent(query)}&language=en`; // Fetch only English news
     if (startDate) {
         url += `&from_date=${startDate}`;
     }
@@ -103,7 +106,9 @@ function searchNewsWithDate() {
             if (!data.results || data.results.length === 0) {
                 throw new Error("No articles found for the given date range");
             }
-            displayNews(data.results);
+            // Filter out duplicates
+            const uniqueArticles = removeDuplicates(data.results, 'title');
+            displayNews(uniqueArticles);
         })
         .catch(error => {
             console.error("Error fetching news with date filter:", error.message);
@@ -113,4 +118,17 @@ function searchNewsWithDate() {
 
 function fetchTopHeadlines() {
     fetchNews('top headlines');
+}
+
+// Function to remove duplicates by a specific key (e.g., title)
+function removeDuplicates(arr, key) {
+    const seen = new Set();
+    return arr.filter(item => {
+        const value = item[key];
+        if (seen.has(value)) {
+            return false;
+        }
+        seen.add(value);
+        return true;
+    });
 }
