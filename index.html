@@ -12,7 +12,7 @@
         <h1>Modern News Website</h1>
         <!-- Search bar and search button for finding news articles -->
         <input type="text" id="searchBar" placeholder="Search news...">
-        <button id="searchButton">Search</button>
+        <button id="searchButton" onclick="searchNews()">Search</button>
         
         <!-- Date Filter Inputs -->
         <label for="startDate">Start Date:</label>
@@ -36,7 +36,7 @@
     </nav>
 
     <!-- News articles will be displayed here -->
-    <div id="newsContainer" class="news-container"></div>
+    <div id="article-list" class="news-container"></div>
 
     <!-- Popup for Full Article Details -->
     <div id="fullArticlePopup" class="popup">

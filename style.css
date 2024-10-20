@@ -1,8 +1,10 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    color: #333;
 }
 
 header {
@@ -10,27 +12,65 @@ header {
     color: white;
     padding: 20px;
     text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
+header input[type="text"] {
+    padding: 10px;
+    margin-right: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 250px;
+}
+
+header input[type="date"] {
+    padding: 10px;
+    margin: 0 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+header button {
+    padding: 10px 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+header button:hover {
+    background-color: #218838;
+}
+
+/* Navigation Styling */
 nav {
     margin: 10px 0;
     text-align: center;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
 nav button {
     margin: 0 5px;
-    padding: 10px;
+    padding: 10px 20px;
     background-color: #007bff;
     color: white;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
 }
 
 nav button:hover {
     background-color: #0056b3;
 }
 
-#newsContainer {
+/* News Container Styling */
+.news-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -45,21 +85,50 @@ nav button:hover {
     padding: 15px;
     width: 300px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .news-item:hover {
     transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .news-item img {
     max-width: 100%;
     border-radius: 5px;
+    height: auto;
 }
 
+.news-item h3 {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #007bff;
+}
+
+.news-item p {
+    margin: 10px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.news-item .read-more {
+    background-color: #007bff;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.news-item .read-more:hover {
+    background-color: #0056b3;
+}
+
+/* Popup Styling */
 .popup {
     display: none; /* Hidden by default */
-    position: fixed; 
+    position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
@@ -75,8 +144,10 @@ nav button:hover {
     padding: 20px;
     border-radius: 8px;
     max-width: 600px;
+    width: 90%;
     text-align: center;
     position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .close-popup {
@@ -84,5 +155,29 @@ nav button:hover {
     top: 10px;
     right: 20px;
     font-size: 20px;
+    color: #555;
     cursor: pointer;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .news-item {
+        width: 90%;
+        margin: 10px 0;
+    }
+    
+    header input[type="text"] {
+        width: 70%;
+    }
+    
+    header button {
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav button {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
 }

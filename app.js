@@ -15,38 +15,78 @@ window.addEventListener('scroll', () => {
 });
 
 async function fetchNews(category, page = 1) {
-    currentCategory = category;
-    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
-    const data = await response.json();
-    displayNews(data.articles, page);
+    try {
+        currentCategory = category;
+        const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        if (!data.articles) {
+            throw new Error("No articles found");
+        }
+        
+        displayNews(data.articles, page);
+    } catch (error) {
+        console.error("Error fetching news:", error.message);
+    }
 }
 
 async function searchNews() {
-    currentPage = 1;
-    const query = document.getElementById('searchBar').value;
-    const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
-    const data = await response.json();
-    displayNews(data.articles);
+    try {
+        currentPage = 1;
+        const query = document.getElementById('searchBar').value;
+        const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.articles) {
+            throw new Error("No articles found");
+        }
+        
+        displayNews(data.articles);
+    } catch (error) {
+        console.error("Error searching news:", error.message);
+    }
 }
 
 async function searchNewsWithDate() {
-    currentPage = 1;
-    const query = document.getElementById('searchBar').value;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+    try {
+        currentPage = 1;
+        const query = document.getElementById('searchBar').value;
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
 
-    if (!startDate || !endDate) {
-        alert('Please select both start and end dates.');
-        return;
+        if (!startDate || !endDate) {
+            alert('Please select both start and end dates.');
+            return;
+        }
+
+        const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        if (!data.articles) {
+            throw new Error("No articles found");
+        }
+
+        displayNews(data.articles);
+    } catch (error) {
+        console.error("Error filtering news by date:", error.message);
     }
-
-    const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
-    const data = await response.json();
-    displayNews(data.articles);
 }
 
 function displayNews(articles, page = 1) {
-    const newsContainer = document.getElementById('newsContainer');
+    const newsContainer = document.getElementById('article-list'); // Ensure this ID is correct
     
     if (!newsContainer) {
         console.error('newsContainer element not found');
