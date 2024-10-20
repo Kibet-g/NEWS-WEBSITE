@@ -1,122 +1,102 @@
-const apiKey = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual News API key
-const baseUrl = 'https://newsapi.org/v2';
+const API_KEY = 'c1f1d1e5e474434cb9ae9a120207acfb'; // Replace with your actual API key
+const API_URL = 'https://newsapi.org/v2/';
+let currentPage = 1; // Track the current page for pagination
+let currentCategory = 'general'; // Track the category
 
-// Global array to store fetched articles
-let articles = [];
+document.addEventListener('DOMContentLoaded', () => {
+    fetchNews(currentCategory);
+});
 
-// Search functionality: When the user clicks the search button, we fetch news articles based on the search term
-document.getElementById('searchButton').addEventListener('click', () => {
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        currentPage++;
+        fetchNews(currentCategory, currentPage);
+    }
+});
+
+async function fetchNews(category, page = 1) {
+    currentCategory = category;
+    const response = await fetch(`${API_URL}top-headlines?category=${category}&apiKey=${API_KEY}&country=us&page=${page}`);
+    const data = await response.json();
+    displayNews(data.articles, page);
+}
+
+async function searchNews() {
+    currentPage = 1;
     const query = document.getElementById('searchBar').value;
-    if (query) {
-        searchArticles(query);
-    }
-});
-
-// Search for news articles using the News API
-function searchArticles(query) {
-    console.log(`Searching for: ${query}`);
-    const url = `${baseUrl}/everything?q=${encodeURIComponent(query)}&apiKey=${apiKey}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.articles && data.articles.length > 0) {
-                articles = data.articles;
-                displayArticles(articles);
-            } else {
-                displayNoResultsFound();
-            }
-        })
-        .catch(error => console.error('Error fetching articles:', error));
-
-    function displayNoResultsFound() {
-        const articleList = document.getElementById('article-list');
-        articleList.innerHTML = '<p>No articles found. Please try a different search.</p>';
-    }
+    const response = await fetch(`${API_URL}everything?q=${query}&apiKey=${API_KEY}`);
+    const data = await response.json();
+    displayNews(data.articles);
 }
 
-// Fetch top headlines when the page loads
-document.addEventListener("DOMContentLoaded", () => {
-    fetchTopHeadlines();
-});
+async function searchNewsWithDate() {
+    currentPage = 1;
+    const query = document.getElementById('searchBar').value;
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
 
-function fetchTopHeadlines() {
-    const url = `${baseUrl}/top-headlines?country=us&apiKey=${apiKey}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.articles) {
-                articles = data.articles;
-                displayArticles(articles);
-            } else {
-                console.error('No articles found.');
-            }
-        })
-        .catch(error => console.error('Error fetching top headlines:', error));
+    if (!startDate || !endDate) {
+        alert('Please select both start and end dates.');
+        return;
+    }
+
+    const response = await fetch(`${API_URL}everything?q=${query}&from=${startDate}&to=${endDate}&apiKey=${API_KEY}`);
+    const data = await response.json();
+    displayNews(data.articles);
 }
 
-// Display news articles on the page
-function displayArticles(articles) {
-    const articleList = document.getElementById('article-list');
-    articleList.innerHTML = ''; // Clear existing articles
+function displayNews(articles, page = 1) {
+    const newsContainer = document.getElementById('newsContainer');
+    
+    if (!newsContainer) {
+        console.error('newsContainer element not found');
+        return;
+    }
+
+    if (page === 1) {
+        newsContainer.innerHTML = ''; // Clear news if it's a new search or category change
+    }
 
     articles.forEach(article => {
-        const articleCard = document.createElement('div');
-        articleCard.className = 'article-card';
+        const newsItem = document.createElement('div');
+        newsItem.className = 'news-item';
 
-        const articleImage = article.urlToImage
-            ? article.urlToImage
-            : 'https://placehold.co/200x300';  // Placeholder image if no image is available
-
-        articleCard.innerHTML = `
-            <img src="${articleImage}" alt="${article.title}">
-            <h2>${article.title}</h2>
+        newsItem.innerHTML = `
+            <img src="${article.urlToImage || 'https://via.placeholder.com/300'}" alt="${article.title}">
+            <h3>${article.title}</h3>
             <p>${article.description ? article.description.substring(0, 100) + '...' : ''}</p>
+            <button class="read-more">Read More</button>
         `;
-        articleCard.addEventListener('click', () => showArticleDetails(article));
-        articleList.appendChild(articleCard);
+
+        newsItem.addEventListener('click', () => {
+            openFullArticle(article);
+        });
+
+        newsItem.querySelector('.read-more').addEventListener('click', (event) => {
+            event.stopPropagation();
+            window.open(article.url, '_blank');
+        });
+
+        newsContainer.appendChild(newsItem);
     });
 }
 
-// Show details of a selected article
-function showArticleDetails(article) {
-    const articleDetails = document.getElementById('article-details');
-    const articleImage = article.urlToImage
-        ? article.urlToImage
-        : 'https://placehold.co/300x450';
+function openFullArticle(article) {
+    const fullContent = article.content || article.description || 'No content available';
 
-    articleDetails.innerHTML = `
-        <h2>${article.title}</h2>
-        <img src="${articleImage}" alt="${article.title}">
-        <p>${article.content || article.description || 'No full content available.'}</p>
-        <a href="${article.url}" target="_blank">Read the full article</a>
-    `;
+    Swal.fire({
+        title: article.title || 'No title available',
+        html: `
+            <img src="${article.urlToImage || 'https://via.placeholder.com/300'}" alt="Article Image" style="width:100%; max-height:300px; object-fit:cover; border-radius:5px;">
+            <p style="text-align: left;">${fullContent.replace(/\[\+\d+ chars\]/, '')}</p>
+            <a href="${article.url}" target="_blank" style="color: #007bff; text-decoration: none;">Read full article</a>
+        `,
+        showCloseButton: true,
+        showConfirmButton: false,
+        width: 600,
+        padding: '3em',
+        background: '#fff',
+        scrollbarPadding: false,
+        heightAuto: false
+    });
 }
-
-// Search bar functionality to filter articles
-const searchBar = document.getElementById('searchBar');
-searchBar.addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const filteredArticles = articles.filter(article =>
-        article.title.toLowerCase().includes(searchTerm)
-    );
-    displayArticles(filteredArticles);
-});
-
-// Toggle between light and dark mode
-const toggleSwitch = document.getElementById('theme-switch');
-toggleSwitch.addEventListener('click', () => {
-    const body = document.body;
-    body.classList.toggle('dark-mode');  // Toggle dark mode class on body
-    localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
-    toggleSwitch.textContent = body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
-});
-
-// Apply saved theme on load
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-mode');
-        toggleSwitch.textContent = 'Light Mode';
-    }
-    fetchTopHeadlines();
-});
