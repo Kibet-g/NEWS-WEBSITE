@@ -3,11 +3,12 @@ const API_URL = 'https://newsapi.org/v2/';
 let currentPage = 1; // Track the current page for pagination
 let currentCategory = 'general'; // Track the category
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
     fetchNews(currentCategory);
+    console.log (fetchNews)
 });
-//A function that is displaying the news
-
 
 // Infinite scrolling function
 window.addEventListener('scroll', () => {
